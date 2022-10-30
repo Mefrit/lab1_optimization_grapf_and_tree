@@ -24,9 +24,8 @@ def getEdges(points):
         j = i
         while j < len(points):
             if (i != j):
-              
                 if len(points[j]) > 0  and points[i]:
-                    graph_edges.append(Edge(points[i],points[j],i, j,edge_index))
+                    graph_edges.append(Edge(points[i],points[j], i + 1, j + 1,edge_index))
                     edge_index +=1
             j+=1
         i+=1

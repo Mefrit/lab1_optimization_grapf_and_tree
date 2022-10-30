@@ -1,5 +1,5 @@
 from unittest import result
-
+from .edge import Edge
 
 class Connectivity:
     'Класс, который будет хранить в себе связные рёбра'
@@ -12,18 +12,18 @@ class Connectivity:
             self.edges.append(edge)
             return True
         else:
-            if self.checkNewEdgeByConnectStart(edge, self.edges[0]):
-                return True
-
             if self.checkNewEdgeByConnectEnd(edge, self.edges[-1]):
                 return True
 
+            if self.checkNewEdgeByConnectStart(edge, self.edges[0]):
+                return True
         return False
 
     def checkNewEdgeByConnectStart(self, new_edge, parent):
         '''провекра на то, что новое ребро сможет войти в компоненту связности cyfxfkf'''
         if len(self.edges) == 0:
             return True
+      
         res1, deprecated1 = self.checkPointOnEqual(parent.point1, new_edge.point1)
         res2, deprecated2 = self.checkPointOnEqual(parent.point2, new_edge.point2)
         res3, deprecated3 = self.checkPointOnEqual(parent.point1, new_edge.point2)
@@ -32,7 +32,7 @@ class Connectivity:
         # res3 = self.checkPointOnEqual(self.edges[0].point1, new_edge.point1)
         # res4 = self.checkPointOnEqual(self.edges[0].point2, new_edge.point2)
         # print("insert "+ str(res1)+ " " + str(res2) + "  "+ str(res3)+ "  "+ str(res4)+" "+ str(len(self.edges)) + str(self.edges))
-      
+        # print('-------->>>>> ',parent.getPoints(), new_edge.getPoints() )
         if (res1 or res2 or res4 or res3) and not deprecated1 and not deprecated2 and not deprecated4 and not deprecated3:
             # print("insert "+ str(new_edge.getPoints()) + "  ---->>>> " + str(self.deprecated_point))
             # if res1: 
@@ -63,29 +63,25 @@ class Connectivity:
         res2, deprecated2 = self.checkPointOnEqual(parent.point2, new_edge.point2)
         res3, deprecated3 = self.checkPointOnEqual(parent.point1, new_edge.point2)
         res4, deprecated4 = self.checkPointOnEqual(parent.point2, new_edge.point1)
+
         # res3 = self.checkPointOnEqual(self.edges[-1].point1, new_edge.point1)
         # res4 = self.checkPointOnEqual(self.edges[-1].point2, new_edge.point2)
         # print("append "+ str(res1)+ " " + str(res2) + "  "+ str(res3)+ "  "+ str(res4)+" "+ str(len(self.edges)))
       
         if (res1 or res2 or res4 or res3) and not deprecated1 and not deprecated2 and not deprecated4 and not deprecated3:
-           
-            # if res1: 
+
             if not self.sameDeprecatedPoint(parent.point1):
                 self.deprecated_point.append(parent.point1)
-                # if not self.sameDeprecatedPoint(parent.point1):
-                #     self.deprecated_point.append(parent.point2)
-            # else:
+
             if not self.sameDeprecatedPoint(parent.point2):
                 self.deprecated_point.append(parent.point2)
-
-            # self.deprecated_point.append(self.edges[-1].point1)
-            # self.deprecated_point.append(self.edges[-1].point2)
 
             self.edges.append(new_edge)
    
             return True
             
         return False    
+
     def sameDeprecatedPoint(self, new_point):
         result = False
         for point in  self.deprecated_point:
@@ -93,6 +89,7 @@ class Connectivity:
                 result = True;
                 break
         return result
+
     def checkPointOnEqual(self, parent_point, new_point):
         # Провекра на то, что точка не входит в запрещенные
         deprecated = self.getDeprecated(new_point)
@@ -130,28 +127,47 @@ class Connectivity:
         res2, deprecated2 = self.checkPointOnEqual(first.point2, last.point2)
         res3, deprecated3 = self.checkPointOnEqual(first.point1, last.point2)
         res4, deprecated4 = self.checkPointOnEqual(first.point2, last.point1)
-        # print(str(res1) + " " + str(res2) + ' ' + str(first.point1) + str(last.point1)+ " ||| " + str(first.point2) + str(last.point2))
-        # print( self.edges)
-        
+
         if res1 or res2 or res3 or res4:
             if first.weight < last.weight:
                 self.edges.pop(-1)
             else:
                 self.edges.pop(0)
     def addConnectivity(self, new_connectivity):
-        # return
         if len(self.edges) == 0:
             self.edges = new_connectivity.edges
             self.deprecated_point = new_connectivity.deprecated_point
             return
-        # print(self.deprecated_point)
         for edge in new_connectivity.edges:
             if not self.getDeprecated(edge.point1) and not self.getDeprecated(edge.point1):
                 self.addEdge(edge)
 
     def calculateMetric(self):
-        return round (self.calculateWeight() / len(self.edges),3)
-        #     for parent_edge in self.edges:
+        return round (self.calculateWeight() / len(self.edges) -  0.7 * len(self.edges), 2)
+
+    def addNewPoints(self, new_points):
+        deprecated_point = []
+        print(new_points, "\n\n\n")
+        graph_edges = []
+        print()
+        first_last_point = self.edges[-1]
+        for point in new_points:
+            # graph_edges.append(Edge(points[i],points[j], i, j,edge_index))
+            print(point,first_last_point)
+
+            last = self.edges[-1]
+            if not self.equal(first_last_point.point1, point['point']) and not self.equal(first_last_point.point2, point['point']):
+                if not self.getDeprecated(last.point1):
+                    edge = Edge( point['point'],last.point1,  point['index'],last.index1, 3)
+                
+                    self.edges.append(edge)
+                else:
+                    edge = Edge( point['point'],last.point2,  point['index'],last.index2, 3)
+            
+                    self.edges.append(edge)
+            
+                
+        return
 
         # Нужно выбрать с каког оконца выгодней
 # class Connectivity:

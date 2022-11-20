@@ -92,6 +92,8 @@ def getRandomPoint2(cache):
 class Point:
     def __init__(self, point, index):
         self.point = point
+        self.x = point[0]
+        self.y = point[1]
         self.index = index
         self.neighbors = {}
         

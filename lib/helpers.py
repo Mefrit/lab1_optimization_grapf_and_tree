@@ -1,4 +1,7 @@
+from random import randint
 from .edge import Edge
+from random import choice
+
 
 
 def read_data(f):
@@ -60,3 +63,43 @@ def getEdges(points):
             j+=1
         i+=1
     return graph_edges
+
+def getRandomPoint(start_index, points_len, deprecated_indexs):
+    while True:
+        new_index = randint(start_index, points_len)
+        # print(new_index, "|| " ,start_index, points_len, " ||| ", deprecated_indexs)
+        if new_index not in deprecated_indexs:
+            break
+    return new_index
+    # return choice([i for i in range(start_index, points_len) if i not in [deprecated_indexs]])
+def getRandomPoint2(cache):
+    # cache
+    # continue
+    # вернет случайный индекс из массива
+    
+    if len(cache) == 1:
+        return cache[0]
+    
+    return cache[randint(0, len(cache)-1)]
+    # while True:
+    #     new_index = randint(start_index, points_len)
+    #     # print(new_index, "|| " ,start_index, points_len, " ||| ", deprecated_indexs)
+    #     if new_index not in deprecated_indexs:
+    #         break
+    # return new_index
+    # return choice([i for i in range(start_index, points_len) if i not in [deprecated_indexs]])
+    
+class Point:
+    def __init__(self, point, index):
+        self.point = point
+        self.index = index
+        self.neighbors = {}
+        
+    def add_neighbors(self, point):
+        self.neighbors[point.index] = point
+        
+    def isFree(self):
+        return len(self.neighbors) <= 2
+    
+    def getInfo(self):
+        return 'Indx: ' + str(self.index) + " | " + str(self.point) + ' neigbors: ' + str([self.neighbors[neighbor].index for neighbor in self.neighbors]) + ""

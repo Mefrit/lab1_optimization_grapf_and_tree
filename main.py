@@ -2,10 +2,10 @@ from math import fabs
 from lib.connect import Connectivity
 from lib.helpers import read_data, getEdges
 # file_name = './data/Taxicab_64.txt'
-file_name = 'Taxicab_128.txt'
+file_name = 'Taxicab_2048.txt'
 # file_name = 'Taxicab_7.txt'
 file_path = './data/' + file_name
-answer_path = './answers/'+ file_name
+answer_path = './answers/w_'+ file_name
 # Идея алгоритма возьмём рандомную точку и будем присоединять минимальне ребра
 # Каждое ребро связанно с каждым, оптимизация, если у точки вокруг нее веса рёбер хуже, чем у ее родителя. то делаем ход у родителя
 f = open(file_path, 'r')
@@ -55,17 +55,18 @@ cache_connectivy = sorted(cache_connectivy, key=lambda x: x.calculateMetric(), r
 # print('len cache_connectify')
 # print(len(cache_connectivy))
 # print('sorted')
-
+i = 0
 for connectivy in cache_connectivy:
- 
+    i += 1
+    if i == 10:
+        break
     parent_connectivity.addConnectivity(connectivy)
 
 
 parent_connectivity.deleteEqualEnds()
-
+bad_points = []
 if abs(len(parent_connectivity.edges) - len(points)) != 1:
     have_point = False
-    bad_points = []
     i = 1
     for point in points:
         have_point = False
@@ -78,15 +79,15 @@ if abs(len(parent_connectivity.edges) - len(points)) != 1:
 parent_connectivity.addNewPoints(bad_points)
 
 f = open(answer_path, 'w')
-f.write('Вес дерева ' + str(parent_connectivity.calculateWeight()) + ", число листьев = 2\n")
-f.write('edge ' + str(len(points)) + ' ' + str(len(parent_connectivity.edges)) + "\n")
+f.write('c Вес дерева ' + str(parent_connectivity.calculateWeight()) + ", число листьев = 2\n")
+f.write('p edge ' + str(len(points)) + ' ' + str(len(parent_connectivity.edges)) + "\n")
 
 
 for edge in parent_connectivity.edges:
-    f.write(str(edge.index1) + ' ' + str(edge.index2)+ "\n")
+    f.write('e ' + str(edge.index1) + ' ' + str(edge.index2)+ "\n")
 
 print('deprecated_point ', len(parent_connectivity.edges), len(points))
-print("parent_connectivity " +str(parent_connectivity.getInfo()))
+print("parent_connectivity " + str(parent_connectivity.getInfo()))
 # # while True:
 #     # Нужно пройтись по всем ребрам и добавить 
 #     # их в компоненты связностиА потом соединить эти компоненты

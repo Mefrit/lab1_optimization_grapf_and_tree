@@ -16,6 +16,36 @@ def read_data(f):
         i+=1
     return data
 
+def read_data2(f):
+    data = []
+    i = 0
+    while True:
+        # считываем строку
+        line = f .readline()
+        # прерываем цикл, если строка пустая
+        if not line:
+            break
+        # выводим строку
+        if(i != 0):
+            data.append(tuple([int(elem) for elem in line.strip().split()]))
+        i+=1
+    return data
+
+def read_data(f):
+    data = []
+    i = 0
+    while True:
+        # считываем строку
+        line = f .readline()
+        # прерываем цикл, если строка пустая
+        if not line:
+            break
+        # выводим строку
+        if(i != 0):
+            data.append(line.strip().split())
+        i+=1
+    return data
+
 def getEdges(points):
     edge_index = 0
     graph_edges = []

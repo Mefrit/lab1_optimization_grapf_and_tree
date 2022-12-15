@@ -98,10 +98,37 @@ class Point:
         self.neighbors = {}
         
     def add_neighbors(self, point):
-        self.neighbors[point.index] = point
-        
+
+        if point != -1:
+            self.neighbors[point.index] = point
+
+    def neighborsLength(self):
+        return len(self.neighbors)
     def isFree(self):
         return len(self.neighbors) <= 2
     
     def getInfo(self):
         return 'Indx: ' + str(self.index) + " | " + str(self.point) + ' neigbors: ' + str([self.neighbors[neighbor].index for neighbor in self.neighbors]) + ""
+
+    def calculateWeight(self):
+        weight = 0
+        max_edge = 0
+        for neighbor in self.neighbors:
+            edge = Edge(self.point,  self.neighbors[neighbor].point, self.index + 1, self.neighbors[neighbor].index + 1, -1)
+            weight += edge.weight
+            if max_edge < edge.weight:
+                max_edge = edge.weight
+        return weight, max_edge
+
+    def getEdjes(self, printed):
+        output = []
+        try:
+            for neighbor in self.neighbors:
+                print(neighbor,self.index)
+                if self.neighbors[neighbor].index not in printed[self.index] and self.index  not in printed[ self.neighbors[neighbor].index]:
+                    output .append( 'e ' + str(self.index + 1) + ' ' + str(self.neighbors[neighbor].index+ 1))
+                    printed[self.index].append(self.neighbors[neighbor].index)
+
+            return "\n".join(output), printed
+        except Exception:
+            return 'ERRORR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', printed
